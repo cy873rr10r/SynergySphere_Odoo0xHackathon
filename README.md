@@ -1,1 +1,0 @@
-# SynergySphere_Odoo0xHackathon
