@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="{{ theme }}">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>My Tasks - Synergy</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/my-tasks.css') }}" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+</head>
+<body class="{{ theme }}">
+    <div id="toast-msg"></div>
+    
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <span class="flash-raw" style="display:none" data-type="{{ category }}">{{ message }}</span>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="company-logo">
+                    <div class="logo-icon">📦</div>
+                    <span>Synergy</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-item" onclick="location.href='{{ url_for('dashboard') }}'">
+                        <div class="nav-icon">📂</div>
+                        <span>Projects</span>
+                    </div>
+                    <div class="nav-item active">
+                        <div class="nav-icon">✓</div>
+                        <span>My Tasks</span>
+                    </div>
+                    <div class="nav-item" onclick="location.href='{{ url_for('team_overview') }}'">
+                        <div class="nav-icon">👥</div>
+                        <span>Team</span>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Theme Toggle -->
+            <div class="theme-toggle-container">
+                <button id="theme-toggle" class="theme-toggle-btn">
+                    <div class="toggle-icon sun">☀️</div>
+                    <div class="toggle-icon moon">🌙</div>
+                    <div class="toggle-slider"></div>
+                </button>
+            </div>
+
+            <!-- Profile Section -->
+            <div class="sidebar-profile">
+                <div class="profile-avatar">
+                    <div class="avatar-circle">{{ user_data.first_name[0] }}{{ user_data.last_name[0] }}</div>
+                </div>
+                <div class="profile-info">
+                    <div class="profile-name">{{ user_data.display_name or (user_data.first_name + " " + user_data.last_name) }}</div>
+                    <div class="profile-email">{{ user_data.email }}</div>
+                </div>
+                <div class="profile-actions">
+                    <button class="profile-menu-btn">⋯</button>
+                    <div class="profile-dropdown">
+                        <a href="#" onclick="showProfileModal()">📝 Edit Profile</a>
+                        <div class="profile-dropdown-divider"></div>
+                        <div class="notification-toggle-item">
+                            <span>🔔 Nots</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="notificationToggle">
+                                <span class="toggle-slider-small"></span>
+                            </label>
+                        </div>
+                        <div class="profile-dropdown-divider"></div>
+                        <a href="{{ url_for('logout') }}">🚪 Logout</a>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="content-header">
+                <div class="header-left">
+                    <button class="hamburger-menu" id="hamburger-menu">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </button>
+                    <div class="breadcrumb">
+                        <span class="breadcrumb-icon">✓</span>
+                        <span>My Tasks</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <!-- Notification Bell -->
+                    <div class="notification-container">
+                        <button class="notification-bell" onclick="toggleNotifications()" id="notificationBell">
+                            <span class="bell-icon">🔔</span>
+                            <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                        </button>
+                        
+                        <div class="notification-dropdown" id="notificationDropdown">
+                            <div class="notification-header">
+                                <span>Notifications</span>
+                                <button class="mark-all-read" onclick="markAllNotificationsRead()">Mark all read</button>
+                            </div>
+                            <div class="notification-list" id="notificationList">
+                                <div class="no-notifications">No notifications yet</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="task-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">{{ tasks|selectattr('status', 'equalto', 'todo')|list|length }}</span>
+                            <span class="stat-label">To Do</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">{{ tasks|selectattr('status', 'equalto', 'in_progress')|list|length }}</span>
+                            <span class="stat-label">In Progress</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">{{ tasks|selectattr('status', 'equalto', 'done')|list|length }}</span>
+                            <span class="stat-label">Completed</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Tasks Content -->
+            <div class="tasks-container">
+                {% if tasks %}
+                    <div class="tasks-list">
+                        {% for task in tasks %}
+                            <div class="task-item status-{{ task.status }}" data-task-id="{{ task.id }}">
+                                <div class="task-checkbox">
+                                    <input type="checkbox" 
+                                           {% if task.status == 'done' %}checked{% endif %}
+                                           onchange="updateTaskStatus({{ task.id }}, this.checked ? 'done' : 'todo')">
+                                </div>
+                                <div class="task-content">
+                                    <div class="task-header">
+                                        <div class="task-title">{{ task.title }}</div>
+                                        <div class="task-meta">
+                                            <span class="task-project">{{ task.project_name }}</span>
+                                            <div class="task-priority priority-{{ task.priority }}">{{ task.priority.title() }}</div>
+                                        </div>
+                                    </div>
+                                    {% if task.description %}
+                                        <div class="task-description">{{ task.description }}</div>
+                                    {% endif %}
+                                    <div class="task-footer">
+                                        <div class="task-info">
+                                            {% if task.due_date %}
+                                                <span class="task-due-date">
+                                                    📅 {{ task.due_date if task.due_date else 'N/A' }}
+                                                </span>
+                                            {% endif %}
+                                            {% if task.creator_name %}
+                                                <span class="task-creator">Created by {{ task.creator_name }}</span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="task-actions">
+                                            <button class="status-btn" onclick="showStatusMenu({{ task.id }}, '{{ task.status }}')">
+                                                {% if task.status == 'todo' %}📝 To Do
+                                                {% elif task.status == 'in_progress' %}🔄 In Progress
+                                                {% elif task.status == 'done' %}✅ Done
+                                                {% endif %}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <div class="empty-icon">✓</div>
+                        <h3>No Tasks Assigned</h3>
+                        <p>You don't have any tasks assigned to you yet. Check out your projects to see if there are any tasks you can pick up!</p>
+                        <button class="btn-primary" onclick="location.href='{{ url_for('dashboard') }}'">View Projects</button>
+                    </div>
+                {% endif %}
+            </div>
+        </main>
+    </div>
+
+    <!-- Status Menu -->
+    <div id="statusMenu" class="status-menu">
+        <div class="status-option" data-status="todo">📝 To Do</div>
+        <div class="status-option" data-status="in_progress">🔄 In Progress</div>
+        <div class="status-option" data-status="done">✅ Done</div>
+    </div>
+
+    <!-- Profile Edit Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Profile</h3>
+                <span class="close" onclick="hideProfileModal()">&times;</span>
+            </div>
+            <form method="POST" action="{{ url_for('update_profile') }}" class="profile-form">
+                <div class="form-group">
+                    <label class="required">Display Name</label>
+                    <input type="text" name="display_name" value="{{ user_data.display_name or (user_data.first_name + ' ' + user_data.last_name) }}" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" value="{{ user_data.email }}" disabled>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="hideProfileModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/my-tasks.js') }}"></script>
+</body>
+</html>

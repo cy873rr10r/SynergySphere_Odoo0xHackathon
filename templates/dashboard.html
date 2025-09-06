@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="{{ theme }}">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Dashboard - Synergy</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+</head>
+<body class="{{ theme }}">
+    <div id="toast-msg"></div>
+    
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <span class="flash-raw" style="display:none" data-type="{{ category }}">{{ message }}</span>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="dashboard-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="company-logo">
+                    <div class="logo-icon">📦</div>
+                    <span>Synergy</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-item active">
+                        <div class="nav-icon">📂</div>
+                        <span>Projects</span>
+                    </div>
+                    <div class="nav-item" onclick="location.href='{{ url_for('my_tasks') }}'">
+                        <div class="nav-icon">✓</div>
+                        <span>My Tasks</span>
+                    </div>
+                    <div class="nav-item" onclick="location.href='{{ url_for('team_overview') }}'">
+                        <div class="nav-icon">👥</div>
+                        <span>Team</span>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Theme Toggle -->
+            <div class="theme-toggle-container">
+                <button id="theme-toggle" class="theme-toggle-btn">
+                    <div class="toggle-icon sun">☀️</div>
+                    <div class="toggle-icon moon">🌙</div>
+                    <div class="toggle-slider"></div>
+                </button>
+            </div>
+
+            <!-- Profile Section -->
+            <div class="sidebar-profile">
+                <div class="profile-avatar">
+                    <div class="avatar-circle">{{ user_data.first_name[0] }}{{ user_data.last_name[0] }}</div>
+                </div>
+                <div class="profile-info">
+                    <div class="profile-name">{{ user_data.display_name or (user_data.first_name + " " + user_data.last_name) }}</div>
+                    <div class="profile-email">{{ user_data.email }}</div>
+                </div>
+                <div class="profile-actions">
+                    <button class="profile-menu-btn">⋯</button>
+                    <div class="profile-dropdown">
+                        <a href="#" onclick="showProfileModal()">📝 Edit Profile</a>
+                        <div class="profile-dropdown-divider"></div>
+                        <div class="notification-toggle-item">
+                            <span>🔔 Nots</span>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="notificationToggle">
+                                <span class="toggle-slider-small"></span>
+                            </label>
+                        </div>
+                        <div class="profile-dropdown-divider"></div>
+                        <a href="{{ url_for('logout') }}">🚪 Logout</a>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="content-header">
+                <div class="header-left">
+                    <button class="hamburger-menu" id="hamburger-menu">
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                        <span class="hamburger-line"></span>
+                    </button>
+                    <div class="breadcrumb">
+                        <span class="breadcrumb-icon">📂</span>
+                        <span>Projects</span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search......" />
+                        <div class="search-icon">🔍</div>
+                    </div>
+                    
+                    <!-- Notification Bell -->
+                    <div class="notification-container">
+                        <button class="notification-bell" onclick="toggleNotifications()" id="notificationBell">
+                            <span class="bell-icon">🔔</span>
+                            <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                        </button>
+                        
+                        <div class="notification-dropdown" id="notificationDropdown">
+                            <div class="notification-header">
+                                <span>Notifications</span>
+                                <button class="mark-all-read" onclick="markAllNotificationsRead()">Mark all read</button>
+                            </div>
+                            <div class="notification-list" id="notificationList">
+                                <div class="no-notifications">No notifications yet</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <button class="new-project-btn" onclick="showCreateProjectModal()">
+                        <span class="btn-icon">➕</span>
+                        <span>New Project</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Projects Grid -->
+            <div class="projects-container">
+                <div class="projects-grid">
+                    {% if projects %}
+                        {% for project in projects %}
+                            <div class="project-card card-{{ project.color }}" onclick="location.href='{{ url_for('project_detail', project_id=project.id) }}'">
+                                <div class="card-header">
+                                    <div class="card-tags">
+                                        <span class="tag tag-{{ project.color }}">{{ project.status.title() }}</span>
+                                        {% if project.task_count > 0 %}
+                                            <span class="tag tag-blue">{{ project.task_count }} Tasks</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="card-menu" onclick="event.stopPropagation(); toggleProjectMenu({{ project.id }})">
+                                        ⋯
+                                        <div class="project-dropdown" id="project-menu-{{ project.id }}">
+                                            {% if project.created_by == user_data.id %}
+                                                <a href="#" onclick="deleteProject({{ project.id }}, '{{ project.name }}')">🗑️ Delete Project</a>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-title">{{ project.name }}</div>
+                                <div class="card-content">
+                                    {% if project.description %}
+                                        <div class="project-description">
+                                            {{ project.description[:100] }}{% if project.description|length > 100 %}...{% endif %}
+                                        </div>
+                                    {% else %}
+                                        <div class="dashboard-preview">
+                                            <div class="mini-chart">📋</div>
+                                            <div class="data-points">
+                                                <div class="data-point blue"></div>
+                                                <div class="data-point green"></div>
+                                                <div class="data-point orange"></div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="card-footer">
+                                    <div class="card-date">📅 {{ project.created_at[:10] if project.created_at else 'N/A' }}</div>
+                                    <div class="card-stats">
+                                        <span class="likes">👤 {{ project.member_count }} members</span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="empty-state">
+                            <div class="empty-icon">📋</div>
+                            <h3>No Projects Yet</h3>
+                            <p>Create your first project to start collaborating with your team.</p>
+                            <button class="btn-primary" onclick="showCreateProjectModal()">Create Project</button>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Profile Edit Modal -->
+    <div id="profileModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Profile</h3>
+                <span class="close" onclick="hideProfileModal()">&times;</span>
+            </div>
+            <form method="POST" action="{{ url_for('update_profile') }}" class="profile-form">
+                <div class="form-group">
+                    <label class="required">Display Name</label>
+                    <input type="text" name="display_name" value="{{ user_data.display_name or (user_data.first_name + ' ' + user_data.last_name) }}" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" value="{{ user_data.email }}" disabled>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="hideProfileModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Create Project Modal -->
+    <div id="createProjectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Project</h3>
+                <span class="close" onclick="hideCreateProjectModal()">&times;</span>
+            </div>
+            <form id="createProjectForm" class="project-form">
+                <div class="form-group">
+                    <label class="required">Project Name</label>
+                    <input type="text" name="name" required placeholder="Enter project name">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea name="description" placeholder="Enter project description (optional)" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Color Theme</label>
+                    <div class="color-picker">
+                        <input type="radio" id="color-blue" name="color" value="blue" checked>
+                        <label for="color-blue" class="color-option blue"></label>
+                        
+                        <input type="radio" id="color-green" name="color" value="green">
+                        <label for="color-green" class="color-option green"></label>
+                        
+                        <input type="radio" id="color-orange" name="color" value="orange">
+                        <label for="color-orange" class="color-option orange"></label>
+                        
+                        <input type="radio" id="color-purple" name="color" value="purple">
+                        <label for="color-purple" class="color-option purple"></label>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="hideCreateProjectModal()">Cancel</button>
+                    <button type="submit" class="btn-save">Create Project</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>
