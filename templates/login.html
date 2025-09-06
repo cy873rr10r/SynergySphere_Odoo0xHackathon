@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Login - Synergy{% endblock %}
+{% block content %}
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-logo">
+                    <div class="logo-icon">📦</div>
+                    <h1>Welcome Back</h1>
+                </div>
+                <p class="auth-subtitle">Sign in to your account to continue</p>
+            </div>
+            
+            <form class="auth-form" method="POST">
+                <div class="input-group">
+                    <label class="required">Email Address</label>
+                    <input type="email" name="email" required placeholder="Enter your email">
+                </div>
+                
+                <div class="input-group">
+                    <label class="required">Password</label>
+                    <input type="password" name="password" required placeholder="Enter your password">
+                </div>
+                
+                <button type="submit" class="auth-submit-btn">
+                    <span>Sign In</span>
+                    <div class="btn-icon">→</div>
+                </button>
+            </form>
+            
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="{{ url_for('register') }}" class="auth-link">Create one now</a></p>
+            </div>
+        </div>
+    </div>
+    
+    {% include "social_links.html" %}
+{% endblock %}

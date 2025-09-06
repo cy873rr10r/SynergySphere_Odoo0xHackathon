@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Solutions - Synergy{% endblock %}
+{% block content %}
+    <div class="solutions-container">
+        <div class="solutions-header">
+            <h1>Comprehensive Solutions</h1>
+            <p class="solutions-subtitle">Everything you need to manage projects and collaborate effectively</p>
+        </div>
+
+        <div class="solutions-grid">
+            <div class="solution-card">
+                <div class="solution-icon">📈</div>
+                <h3>Project Dashboard & Analytics</h3>
+                <p>Get comprehensive insights into your projects with real-time analytics, progress tracking, and performance metrics to make data-driven decisions.</p>
+                <div class="solution-features">
+                    <span class="feature-tag">Real-time Analytics</span>
+                    <span class="feature-tag">Progress Tracking</span>
+                    <span class="feature-tag">Performance Metrics</span>
+                </div>
+                <a href="{{ url_for('login') }}" class="solution-btn">Try Dashboard</a>
+            </div>
+
+            <div class="solution-card">
+                <div class="solution-icon">👥</div>
+                <h3>Team Collaboration Tools</h3>
+                <p>Seamlessly collaborate with your team using built-in messaging, file sharing, member management, and role-based permissions.</p>
+                <div class="solution-features">
+                    <span class="feature-tag">Team Messaging</span>
+                    <span class="feature-tag">Member Management</span>
+                    <span class="feature-tag">Role Permissions</span>
+                </div>
+                <a href="{{ url_for('login') }}" class="solution-btn">Explore Teams</a>
+            </div>
+
+            <div class="solution-card">
+                <div class="solution-icon">✅</div>
+                <h3>Advanced Task Management</h3>
+                <p>Create, assign, and track tasks with multiple status levels, priority settings, due dates, and automated status updates for efficient workflow management.</p>
+                <div class="solution-features">
+                    <span class="feature-tag">Task Assignment</span>
+                    <span class="feature-tag">Status Tracking</span>
+                    <span class="feature-tag">Priority Management</span>
+                </div>
+                <a href="{{ url_for('login') }}" class="solution-btn">Manage Tasks</a>
+            </div>
+
+            <div class="solution-card">
+                <div class="solution-icon">🔔</div>
+                <h3>Smart Notification System</h3>
+                <p>Stay informed with intelligent notifications for project updates, task assignments, team messages, and milestone achievements with customizable preferences.</p>
+                <div class="solution-features">
+                    <span class="feature-tag">Real-time Alerts</span>
+                    <span class="feature-tag">Custom Preferences</span>
+                    <span class="feature-tag">Smart Filtering</span>
+                </div>
+                <a href="{{ url_for('login') }}" class="solution-btn">Setup Notifications</a>
+            </div>
+
+            <div class="solution-card">
+                <div class="solution-icon">🌍</div>
+                <h3>Multi-theme Interface</h3>
+                <p>Personalize your experience with beautiful dark and light themes, responsive design, and intuitive user interface that adapts to any device.</p>
+                <div class="solution-features">
+                    <span class="feature-tag">Dark & Light Modes</span>
+                    <span class="feature-tag">Responsive Design</span>
+                    <span class="feature-tag">Mobile Friendly</span>
+                </div>
+                <a href="{{ url_for('login') }}" class="solution-btn">Try Themes</a>
+            </div>
+
+            <div class="solution-card">
+                <div class="solution-icon">🔍</div>
+                <h3>Intelligent Search & Filtering</h3>
+                <p>Quickly find projects, tasks, and team members with powerful search capabilities, smart filters, and organized categorization systems.</p>
+                <div class="solution-features">
+                    <span class="feature-tag">Smart Search</span>
+                    <span class="feature-tag">Advanced Filters</span>
+                    <span class="feature-tag">Quick Navigation</span>
+                </div>
+                <a href="{{ url_for('login') }}" class="solution-btn">Search Projects</a>
+            </div>
+        </div>
+
+        <div class="solutions-cta">
+            <h2>Ready to transform your project management?</h2>
+            <p>Join teams worldwide who choose Synergy for efficient project collaboration and success.</p>
+            <a href="{{ url_for('register') }}" class="cta-button">Start Your Journey</a>
+        </div>
+    </div>
+{% endblock %}

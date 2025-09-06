@@ -1,0 +1,195 @@
+{% extends "base.html" %}
+{% block title %}Home - Synergy{% endblock %}
+{% block content %}
+    {% if user_data %}
+        <div class="dashboard-container">
+            <!-- Header Section -->
+            <div class="dashboard-header">
+                <h1>Welcome back, {{ user_data.display_name or user_data.first_name }}! 🎉</h1>
+                <p class="dashboard-subtitle">Here's your project overview and recent activity</p>
+            </div>
+
+            <!-- Profile Section -->
+            <div class="profile-section">
+                <div class="profile-card">
+                    <div class="profile-avatar">
+                        <div class="avatar-circle">{{ user_data.first_name[0] }}{{ user_data.last_name[0] }}</div>
+                    </div>
+                    <div class="profile-info">
+                        <h3>{{ user_data.display_name or (user_data.first_name + " " + user_data.last_name) }}</h3>
+                        <p class="profile-email">{{ user_data.email }}</p>
+                        <form method="POST" action="{{ url_for('update_profile') }}" class="profile-update-form">
+                            <input type="text" name="display_name" value="{{ user_data.display_name or (user_data.first_name + ' ' + user_data.last_name) }}" placeholder="Your display name" required>
+                            <button type="submit" class="update-btn">Update Name</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Projects Section -->
+            <div class="projects-section">
+                <div class="section-header">
+                    <h2>My Projects</h2>
+                    <button class="new-project-btn">+ New Project</button>
+                </div>
+                
+                <div class="projects-grid">
+                    <div class="project-card project-card-1">
+                        <div class="project-status">Development</div>
+                        <h3>Joyful Capybara</h3>
+                        <p>AI-powered task management system</p>
+                        <div class="project-stats">
+                            <span>85% Complete</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card project-card-2">
+                        <div class="project-status">Planning</div>
+                        <h3>Impeccable Rabbit</h3>
+                        <p>E-commerce analytics dashboard</p>
+                        <div class="project-stats">
+                            <span>30% Complete</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 30%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="project-card project-card-3">
+                        <div class="project-status">Testing</div>
+                        <h3>Rusty Whale</h3>
+                        <p>Social media monitoring tool</p>
+                        <div class="project-stats">
+                            <span>92% Complete</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 92%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <a href="#" class="action-btn">📊 View Analytics</a>
+                <a href="#" class="action-btn">⚙️ Settings</a>
+                <a href="{{ url_for('logout') }}" class="action-btn logout-action">🚪 Logout</a>
+            </div>
+        </div>
+    {% else %}
+        <!-- Hero Section -->
+        <div class="hero-section">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-icon">✨</span>
+                    <span>Project Management Made Simple</span>
+                </div>
+                <h1 class="hero-title">Welcome to <span class="gradient-text">Synergy</span></h1>
+                <p class="hero-subtitle">
+                    The ultimate project management platform that brings teams together. 
+                    Create, collaborate, and deliver exceptional projects with powerful tools designed for modern teams.
+                </p>
+                <div class="hero-buttons">
+                    <a href="{{ url_for('register') }}" class="hero-btn primary">
+                        <span>Get Started Free</span>
+                        <div class="btn-icon">→</div>
+                    </a>
+                    <a href="{{ url_for('login') }}" class="hero-btn secondary">
+                        <span>Sign In</span>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="hero-visual">
+                <div class="feature-cards">
+                    <div class="feature-card card-1">
+                        <div class="card-icon">📈</div>
+                        <h4>Track Progress</h4>
+                        <p>Real-time project tracking</p>
+                    </div>
+                    <div class="feature-card card-2">
+                        <div class="card-icon">👥</div>
+                        <h4>Team Collaboration</h4>
+                        <p>Seamless team communication</p>
+                    </div>
+                    <div class="feature-card card-3">
+                        <div class="card-icon">⚙️</div>
+                        <h4>Task Management</h4>
+                        <p>Organize and prioritize tasks</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Features Section -->
+        <div class="features-section">
+            <div class="section-header">
+                <h2>Why Choose Synergy?</h2>
+                <p>Powerful features that make project management effortless</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Smart Project Organization</h3>
+                    <p>Keep your projects organized with intuitive categorization, color coding, and status tracking.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <h3>Real-time Notifications</h3>
+                    <p>Stay updated with instant notifications for task updates, project changes, and team activities.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">👤</div>
+                    <h3>Team Management</h3>
+                    <p>Add team members, assign roles, and manage permissions with our comprehensive user management system.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">📝</div>
+                    <h3>Task Tracking</h3>
+                    <p>Create, assign, and track tasks with multiple status options and priority levels for better organization.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">💬</div>
+                    <h3>Team Communication</h3>
+                    <p>Built-in messaging system for seamless team communication and project discussions.</p>
+                </div>
+                
+                <div class="feature-item">
+                    <div class="feature-icon">🌙</div>
+                    <h3>Dark & Light Themes</h3>
+                    <p>Choose between beautiful dark and light themes that adapt to your working preferences.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Community Stats -->
+        <div class="community-section">
+            <div class="community-stats">
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Projects Created</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">1000+</div>
+                    <div class="stat-label">Tasks Completed</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">150+</div>
+                    <div class="stat-label">Active Users</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">98%</div>
+                    <div class="stat-label">User Satisfaction</div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

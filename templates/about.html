@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}About - Synergy{% endblock %}
+{% block content %}
+    <div class="about-container">
+        <div class="about-header">
+            <h1>About Synergy</h1>
+            <p class="about-subtitle">Transforming Project Management for Modern Teams</p>
+        </div>
+
+        <div class="about-content">
+            <div class="about-section">
+                <h2>🚀 Our Mission</h2>
+                <p>Synergy is designed for teams who believe in the power of seamless collaboration and efficient project management. We provide a comprehensive platform where project managers, developers, designers, and stakeholders can work together to deliver exceptional results on time and within scope.</p>
+            </div>
+
+            <div class="about-section">
+                <h2>💡 What Makes Us Different</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Intuitive Interface</h3>
+                        <p>Clean, modern design that makes project management effortless with drag-and-drop functionality and smart workflows.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🤝</div>
+                        <h3>Seamless Collaboration</h3>
+                        <p>Real-time communication, file sharing, and team coordination tools that keep everyone on the same page.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🎯</div>
+                        <h3>Smart Automation</h3>
+                        <p>Automated project status updates, intelligent task assignments, and smart notifications that reduce manual overhead.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-section">
+                <h2>🏆 Success Stories</h2>
+                <p>Organizations worldwide trust Synergy to manage their most important projects. Our platform has enabled teams to:</p>
+                <ul class="success-list">
+                    <li>Increase project delivery speed by 40% through streamlined workflows</li>
+                    <li>Improve team communication and reduce project delays</li>
+                    <li>Scale project management practices across distributed teams</li>
+                    <li>Maintain high-quality deliverables with better task tracking</li>
+                    <li>Achieve 98% user satisfaction with our intuitive interface</li>
+                </ul>
+            </div>
+
+            <div class="about-section">
+                <h2>🛫️ Built with Modern Technology</h2>
+                <p>Synergy is built using cutting-edge technologies to ensure performance, reliability, and security:</p>
+                <div class="tech-stack">
+                    <div class="tech-item">
+                        <div class="tech-icon">🐍</div>
+                        <h4>Python & Flask</h4>
+                        <p>Robust backend framework for scalable web applications</p>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-icon">🎨</div>
+                        <h4>Modern CSS & JavaScript</h4>
+                        <p>Responsive design with smooth animations and interactions</p>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-icon">🛢️</div>
+                        <h4>SQLite Database</h4>
+                        <p>Fast, reliable data storage for all your projects and tasks</p>
+                    </div>
+                    <div class="tech-item">
+                        <div class="tech-icon">🔒</div>
+                        <h4>Secure Authentication</h4>
+                        <p>Industry-standard security practices to protect your data</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="about-section">
+                <h2>🌟 Join the Community</h2>
+                <p>Whether you're managing a small team or coordinating large-scale projects, Synergy adapts to your needs. Join thousands of teams who have transformed their project management workflow.</p>
+                <div class="community-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">150+</span>
+                        <span class="stat-label">Active Teams</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">500+</span>
+                        <span class="stat-label">Projects Managed</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">1000+</span>
+                        <span class="stat-label">Tasks Completed</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">98%</span>
+                        <span class="stat-label">User Satisfaction</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="about-section cta-section">
+                <h2>🚀 Ready to Get Started?</h2>
+                <p>Experience the future of project management today. Join Synergy and see how easy project collaboration can be.</p>
+                <div class="cta-buttons">
+                    <a href="{{ url_for('register') }}" class="cta-btn primary">Start Your Journey</a>
+                    <a href="{{ url_for('solutions') }}" class="cta-btn secondary">Explore Features</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="{{ theme }}">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{% block title %}Synergy{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Pacifico&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+</head>
+<body class="{{ theme }}">
+    <div class="page-wrapper">
+        <nav class="navbar">
+            <div class="title logo-casual">Synergy</div>
+            <ul class="nav-links">
+                <li><a href="/">Home</a></li>
+                <li><a href="/register">Register</a></li>
+                <li><a href="/login">Login</a></li>
+                <li><a href="/solutions">Solutions</a></li>
+                <li><a href="/about">About</a></li>
+            </ul>
+            <button id="theme-toggle" aria-label="Toggle Theme">🌙</button>
+        </nav>
+
+        <div id="toast-msg"></div>
+
+        <main class="main-container">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                {% for category, message in messages %}
+                  <span class="flash-raw" style="display:none" data-type="{{ category }}">{{ message }}</span>
+                {% endfor %}
+              {% endif %}
+            {% endwith %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <footer class="sticky-footer">
+        <div class="footer-content">
+            <p>Made for OdooXNMIT Hackathon • Synergy 2025 ©</p>
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a> • 
+                <a href="#">Terms of Service</a> • 
+                <a href="#">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+</body>
+</html>
